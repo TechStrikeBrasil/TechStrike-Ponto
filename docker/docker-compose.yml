@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: techstrike_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: techstrike
+      MYSQL_USER: techstrike_user
+      MYSQL_PASSWORD: userpassword
+    volumes:
+      - ../database:/var/lib/mysql # Caminho para persistência dos dados
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: techstrike_phpmyadmin
+    depends_on:
+      - db
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "8080:80"
